@@ -1,18 +1,29 @@
 <?php
+
 declare (strict_types=1);
 
-function allaActivityTester():string {
-    $retur="";
-    $retur.= test_HamtaAllaAktiviteter();
-    $retur.= test_HamtaEnAktivitet();
-    $retur.= test_SparaNyAktivitet();
-    $retur.= test_UppdateraAktivitet();
-    $retur.= test_RaderaAktivitet();
-    
+/**
+ * Funktion för att testa alla aktiviteter
+ * @return string html-sträng med resultatet av alla tester
+ */
+function allaActivityTester(): string {
+    // Kom ihåg att lägga till alla funktioner i filen!
+    $retur = "";
+    $retur .= test_HamtaAllaAktiviteter();
+    $retur .= test_HamtaEnAktivitet();
+    $retur .= test_SparaNyAktivitet();
+    $retur .= test_UppdateraAktivitet();
+    $retur .= test_RaderaAktivitet();
+
     return $retur;
 }
 
-function testActivityFunction(string $funktion):string {
+/**
+ * Funktion för att testa en enskild funktion
+ * @param string $funktion namnet (utan test_) på funktionen som ska testas
+ * @return string html-sträng med information om resultatet av testen eller att testet inte fanns
+ */
+function testActivityFunction(string $funktion): string {
     if (function_exists("test_$funktion")) {
         return call_user_func("test_$funktion");
     } else {
@@ -20,34 +31,54 @@ function testActivityFunction(string $funktion):string {
     }
 }
 
-function test_HamtaAllaAktiviteter():string {
-    $retur="<h2>test_HamtaAllaAktiviteter</h2>";
-    $retur.= "<p class='ok'>Testar hämta alla aktiviteter</p>";
+/**
+ * Tester för funktionen hämta alla aktiviteter
+ * @return string html-sträng med alla resultat för testerna 
+ */
+function test_HamtaAllaAktiviteter(): string {
+    $retur = "<h2>test_HamtaAllaAktiviteter</h2>";
+    $retur .= "<p class='ok'>Testar hämta alla aktiviteter</p>";
     return $retur;
 }
 
-function test_HamtaEnAktivitet():string {
-    $retur="<h2>test_HamtaEnAktivitet</h2>";
-    $retur.=  "<p class='ok'>Testar hämta en aktivitet</p>";
-    $retur.=  "<p class='error'>Det här testet gick fel!</p>";
+/**
+ * Tester för funktionen hämta enskild aktivitet
+ * @return string html-sträng med alla resultat för testerna 
+ */
+function test_HamtaEnAktivitet(): string {
+    $retur = "<h2>test_HamtaEnAktivitet</h2>";
+    $retur .= "<p class='ok'>Testar hämta en aktivitet</p>";
+    $retur .= "<p class='error'>Det här testet gick fel!</p>";
     return $retur;
 }
 
-function test_SparaNyAktivitet():string {
-    $retur="<h2>test_SparaNyAktivitet</h2>";
-    $retur.=  "<p class='ok'>Testar spara ny aktivitet</p>";
-    $retur.=  "<p class='ok'>Ett test till för spara som givk bra</p>";
+/**
+ * Tester för funktionen spara aktivitet
+ * @return string html-sträng med alla resultat för testerna 
+ */
+function test_SparaNyAktivitet(): string {
+    $retur = "<h2>test_SparaNyAktivitet</h2>";
+    $retur .= "<p class='ok'>Testar spara ny aktivitet</p>";
+    $retur .= "<p class='ok'>Ett test till för spara som givk bra</p>";
     return $retur;
 }
 
-function test_UppdateraAktivitet():string {
-    $retur="<h2>test_UppdateraAktivitet</h2>";
-    $retur.=  "<p class='ok'>Testar uppdatera aktivitet</p>";
+/**
+ * Tester för uppdatera aktivitet
+ * @return string html-sträng med alla resultat för testerna 
+ */
+function test_UppdateraAktivitet(): string {
+    $retur = "<h2>test_UppdateraAktivitet</h2>";
+    $retur .= "<p class='ok'>Testar uppdatera aktivitet</p>";
     return $retur;
 }
 
-function test_RaderaAktivitet():string {
-    $retur="<h2>test_RaderaAktivitet</h2>";
-    $retur.=  "<p class='ok'>Testar radera aktivitet</p>";
+/**
+ * Tester för funktionen radera aktivitet
+ * @return string html-sträng med alla resultat för testerna 
+ */
+function test_RaderaAktivitet(): string {
+    $retur = "<h2>test_RaderaAktivitet</h2>";
+    $retur .= "<p class='ok'>Testar radera aktivitet</p>";
     return $retur;
 }

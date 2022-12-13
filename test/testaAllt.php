@@ -6,14 +6,20 @@ require './testActivities.php';
 require './testCompilation.php';
 require './testTasks.php';
 
+/**
+ * Testar alla funktioner som heter test_
+ * @return string html-sträng med alla resultat för testerna
+ */
 function testaAllaFunktioner(): string {
-
+    // Läser in alla definierade funktioner
     $allaFunktioner = get_defined_functions();
-    $retur = "";
+    $retur = "<h1>Testa alla funktionsanrop</h1>";
 
+    // Loopa igenom alla user-funktioner
     foreach ($allaFunktioner['user'] as $funk) {
         if (substr($funk, 0, 5) === "test_") {
-            $retur .= "<h2>$funk</h2>" . call_user_func($funk) . "\n";
+            // Anropa funktioner vars namn inleds med test_
+            $retur .= call_user_func($funk) . "\n";
         }
     }
 

@@ -5,21 +5,22 @@ require_once '../src/routes.php';
 require_once '../src/Route.php';
 require_once '../src/Response.php';
 require_once '../src/RequestMethod.php';
+require_once './funktioner.php';
 
 // Hämta begärd resurs
 $uri = filter_var($_SERVER['REQUEST_URI'], FILTER_UNSAFE_RAW);
+// Lagra undan aktuell mapp
+$dir = dirname($_SERVER['SCRIPT_NAME']);
 
 // Hämta ruttinformation
 $route = getRoute($uri);
 
-////var_dump($route);
-
 switch (count($route->getParams())) {
-    case 0:
+    case 0: // Inga parametrar - testa allt
         require_once './testaAllt.php';
         $html = testaAllaFunktioner();
         break;
-    case 1:
+    case 1: // En parameter - testa en avdelning
         switch ($route->getParams()[0]) {
             case "activity":
                 require_once './testActivities.php';
@@ -37,12 +38,12 @@ switch (count($route->getParams())) {
                 require_once './testCompilation.php';
                 $html = allaCompilationTester();
                 break;
-            default:
-                var_dump($route);
+            default: // Ingen träff - visa info
+                $html = ingenRutt($route->getParams()[0]);
                 break;
         }
         break;
-    case 2:
+    case 2: // Två parametrar testa enskilda funktioner
         switch ($route->getParams()[0]) {
             case "activity":
                 require_once './testActivities.php';
@@ -60,24 +61,24 @@ switch (count($route->getParams())) {
                 require_once './testCompilation.php';
                 $html = testCompilationFunction($route->getParams()[1]);
                 break;
-            default:
-                var_dump($route);
+            default: // Ingen träff - visa info
+                $html = ingenRutt($route->getParams()[0]);
                 break;
         }
         break;
-    default:
-        var_dump($route);
+    default: // Ingen träff - Visa info
+        $html = ingenRutt(implode("/", $route->getParams()));
         break;
 }
 
-$dir= dirname($_SERVER['SCRIPT_NAME']);
+// Skriv ut en snygg htlm-sida som svar
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Tester för tidsredovisnings API:et</title>
         <meta charset="UTF-8">
-        <link href="<?= $dir;?>/index.css" rel="stylesheet" type="text/css"/>
+        <link href="<?= $dir; ?>/index.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <?= $html; ?>

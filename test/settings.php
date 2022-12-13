@@ -1,7 +1,11 @@
 <?php
 
-function settings():stdClass {
-    $retur=new stdClass();
-    
+/**
+ * Inställningar för tester
+ * @return stdClass
+ */
+function settings(): stdClass {
+    $retur = new stdClass();
+
     return $retur;
 }
