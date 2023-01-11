@@ -5,10 +5,10 @@ declare (strict_types=1);
 /**
  * Hämtar rutt information från inskickad URI
  * @param string $querystring
- * @param string $method
+ * @param RequestMethod $method
  * @return Route
  */
-function getRoute(string $querystring, string $method = "GET"): Route {
+function getRoute(string $querystring, RequestMethod $method = RequestMethod::GET): Route {
     // Ta bort avslutande snedstreck
     if (substr($querystring, -1) === "/") {
         $querystring = substr($querystring, 0, -1);
@@ -34,8 +34,7 @@ function getRoute(string $querystring, string $method = "GET"): Route {
     }
 
     // Kontrollera inskickad metod och läs av eventuell $_POST[action]
-    if ($method === "POST") {
-        $metod = RequestMethod::POST;
+    if ($method === RequestMethod::POST) {
         if (isset($_POST["action"]) && $_POST["action"] === "delete") {
             $metod = RequestMethod::DELETE;
         } elseif (isset($_POST["action"]) && $_POST["action"] === "save" && count($params) > 0) {

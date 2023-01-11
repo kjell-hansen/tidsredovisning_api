@@ -12,15 +12,15 @@ $uri = filter_var($_SERVER['REQUEST_URI'], FILTER_UNSAFE_RAW);
 // Läs in eventuell POST-data
 if (count($_POST) > 0) {
     $postData = $_POST;
-    $metod = "POST";
+    $metod = RequestMethod::POST;
 } else {
     $postData = [];
-    $metod = "GET";
+    $metod = RequestMethod::GET;
 }
 
 // Hämta ruttinformation
 $route = getRoute($uri, $metod);
-
+var_dump($route->getRoute());
 // Hantera ruttinformationen
 switch ($route->getRoute()) {
     case "/activity/":
@@ -45,4 +45,4 @@ switch ($route->getRoute()) {
 }
 
 // Skicka svar som JSON-data
-skickaJSON($retur);
+$retur->skickaJSON();
