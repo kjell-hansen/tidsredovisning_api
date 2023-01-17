@@ -27,9 +27,9 @@ switch (count($route->getParams())) {
                 $html = allaActivityTester();
                 break;
             case "tasklist":
-                require_once './testTasks.php';
-                $html = allaTasklistTester();
-                break;
+//                require_once './testTasks.php';
+//                $html = allaTasklistTester();
+//                break;
             case "task":
                 require_once './testTasks.php';
                 $html = allaTaskTester();
