@@ -184,7 +184,111 @@ function test_HamtaEnUppgift(): string {
  */
 function test_SparaUppgift(): string {
     $retur = "<h2>test_SparaUppgift</h2>";
-    $retur .= "<p class='ok'>Testar spara uppgift</p>";
+    try {
+    // Testa allt OK
+    $igar=new DateTimeImmutable("yesterday");
+    $imorgon=new DateTimeImmutable("tomorrow");
+    
+    $postdata=["date"=>$igar->format('Y-m-d'),
+        "time"=>"05:00", 
+        "activityId"=>1, 
+        "description"=>"Hurra vad bra"];
+    $db= connectDb();
+    $db->beginTransaction();
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===200) {
+        $retur .="<p class='ok'>Spara ny uppgift lyckades</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift misslyckades {$svar->getStatus()} "
+        . "returnerades istället för förväntat 200</p>";
+    }
+    $db->rollBack();
+    
+    // Testa felaktigt datum (i morgon) => 400
+    $postdata["date"]=$imorgon->format("Y-m-d");
+    $db->beginTransaction();
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===400) {
+        $retur .="<p class='ok'>Spara ny uppgift misslyckades som förväntat (date = imorgon)</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift returnerade {$svar->getStatus()} "
+        . " istället för förväntat 400</p>";
+    }
+    $db->rollBack();
+
+    // Testa felaktig datumformat => 400
+    $postdata["date"]=$igar->format("d.m.Y");
+    $db->beginTransaction();
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===400) {
+        $retur .="<p class='ok'>Spara ny uppgift misslyckades som förväntat (felaktigt datumformat)</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift med felaktigt datumformat "
+                . "returnerade {$svar->getStatus()} istället för förväntat 400</p>";
+    }
+    $db->rollBack();
+    
+    // Testa datum saknas =>400
+    unset($postdata["date"]);
+    $db->beginTransaction();
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===400) {
+        $retur .="<p class='ok'>Spara ny uppgift misslyckades som förväntat (datum saknas)</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift utan datum "
+                . "returnerade {$svar->getStatus()} istället för förväntat 400</p>";
+    }
+    $db->rollBack();
+    
+    // Testa felaktig tid (12 timmar) => 400
+     $db->beginTransaction();
+   $postdata["date"]=$igar->format('Y-m-d');
+    $postdata["time"]="12:00";
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===400) {
+        $retur .="<p class='ok'>Spara ny uppgift misslyckades som förväntat (felaktig tid 12:00)</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift med felaktig tid (12:00) "
+                . "returnerade {$svar->getStatus()} istället för förväntat 400</p>";
+    }
+    $db->rollBack();
+    
+    // Testa felaktigt tidsformat => 400
+    $db->beginTransaction();
+    $postdata["time"]="5_30";
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===400) {
+        $retur .="<p class='ok'>Spara ny uppgift misslyckades som förväntat (felaktig tidsformat)</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift med felaktig tidsformat "
+                . "returnerade {$svar->getStatus()} istället för förväntat 400</p>";
+    }
+    $db->rollBack();
+    
+    // Testa tid saknas => 400
+    $db->beginTransaction();
+    unset($postdata["time"]);
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===400) {
+        $retur .="<p class='ok'>Spara ny uppgift misslyckades som förväntat (tid saknas)</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift utan tid "
+                . "returnerade {$svar->getStatus()} istället för förväntat 400</p>";
+    }
+    $db->rollBack();
+    
+    
+    // Testa description saknas => 200
+    
+    // Testa aktivitetsid felaktigt (-1) => 400
+    
+    // Testa aktivitetsid som saknas (100) => 400
+    
+    
+    } catch (Exception $ex) {
+        $retur .=$ex->getMessage();
+    }
+    
     return $retur;
 }
 
