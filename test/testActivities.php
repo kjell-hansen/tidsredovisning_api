@@ -47,10 +47,15 @@ function test_HamtaAllaAktiviteter(): string {
             $retur .= "<p class='ok'>Korrekt statuskod 200</p>";
         }
 
-        // Kontrollerar att ingen aktivitet är tom
-        foreach ($svar->getContent() as $aktivitet) {
-            if ($aktivitet->activity === "") {
-                $retur .= "<p class='error'>TOM aktivitet!</p>";
+        // Kontrollerar egenskaperna
+        foreach ($svar->getContent()->activities as $aktivitet) {
+            if(!isset($aktivitet->id)) {
+                $retur .="<p class='error'>Egenskapen id saknas</p>";
+                break;
+            }
+            if(!isset($aktivitet->activity)) {
+                $retur .="<p class='error'>Egenskapen activity saknas</p>";
+                break;
             }
         }
     } catch (Exception $ex) {

@@ -54,8 +54,11 @@ function hamtaAllaAktiviteter(): Response {
         $retur[] = $post;
     }
 
+    $out= new stdClass();
+    $out->activities=$retur;
+    
     // Returnera svaret
-    return new Response($retur, 200);
+    return new Response($out, 200);
 }
 
 /**

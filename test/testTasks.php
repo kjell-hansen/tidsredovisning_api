@@ -115,8 +115,55 @@ function test_HamtaAllaUppgifterDatum(): string {
     }
     
     // Testa datum utan poster => 200 och tom array för tasks
+    $datum1=new DateTimeImmutable("1970-01-01");
+    $datum2=new DateTimeImmutable("1970-01-01");
+    $svar= hamtaDatum($datum1, $datum2);
+    if ($svar->getStatus()!==200) {
+            $retur .= "<p class='error'>Hämta datum (1970-01-01 -- 1970-01-01) gav {$svar->getStatus()} "
+            . "istället för förväntat svar 200</p>";
+    } else {
+        $retur .= "<p class='ok'>Hämta datum (1970-01-01 -- 1970-01-01) gav förväntat svar 200</p>";
+        $resultat=$svar->getContent()->tasks;
+        if(!$resultat===[]) {
+            $retur .= "<p class='error'>Hämta datum (1970-01-01 -- 1970-01-01) ska innehålla en tom array för tasks<br>"
+                    . print_r($resultat, true) . " <br>returnerades</p>";
+        } 
+    }
     
     // Testa giltiga datum med poster => 200 och giltiga egenskaper
+    $datum1=new DateTimeImmutable("1970-01-01");
+    $datum2=new DateTimeImmutable();
+    $svar= hamtaDatum($datum1, $datum2);
+    if($svar->getStatus()!==200) {
+            $retur .= "<p class='error'>Hämta poster för datum (1970-01-01 -- {$datum2->format('Y-m-d')} " 
+                   ." gav {$svar->getStatus()} istället för förväntat svar 200</p>";
+    } else {
+        $retur .= "<p class='ok'>Hämta poster för datum (1970-01-01 -- {$datum2->format('Y-m-d')}"
+        . " gav förväntat svar 200</p>";
+        $result=$svar->getContent()->tasks;
+        foreach ($result as $task) {
+            if(!isset($task->id)) {
+                $retur .="<p class='error'>Egenskapen id saknas</p>";
+                break;
+            }
+            if(!isset($task->activityId)) {
+                $retur .="<p class='error'>Egenskapen activityId saknas</p>";
+                break;
+            }
+            if(!isset($task->activity)) {
+                $retur .="<p class='error'>Egenskapen activity saknas</p>";
+                break;
+            }
+            if(!isset($task->date)) {
+                $retur .="<p class='error'>Egenskapen date saknas</p>";
+                break;
+            }
+            if(!isset($task->time)) {
+                $retur .="<p class='error'>Egenskapen time saknas</p>";
+                break;
+            }
+        }
+    }
 
     return $retur;
 }
