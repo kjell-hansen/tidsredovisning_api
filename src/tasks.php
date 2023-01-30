@@ -175,7 +175,9 @@ function sparaNyUppgift(array $postData): Response {
     
     // Koppla mot databas
     $db= connectDb();
-    
+    if(!isset($postData["description"])) {
+        $postData["description"]="";
+    }
     // Förbered och exekvera SQL
     $stmt=$db->prepare("INSERT INTO tasks "
             . " (date, time, activityid, description) "
@@ -244,7 +246,7 @@ function kontrolleraIndata(array $postData):string {
         if(!$aktivitetsId || $aktivitetsId<1) {
             return "Ogiltigt aktivitetsid (activityId)";
         }
-        $svar= hamtaEnskildUppgift($aktivitetsId);
+        $svar= hamtaEnskildAktivitet($aktivitetsId);
         if($svar->getStatus()!==200) {
             return "Angivet aktivitetsid saknas";
         }

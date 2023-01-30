@@ -242,7 +242,7 @@ function test_SparaUppgift(): string {
     
     // Testa felaktig tid (12 timmar) => 400
      $db->beginTransaction();
-   $postdata["date"]=$igar->format('Y-m-d');
+    $postdata["date"]=$igar->format('Y-m-d');
     $postdata["time"]="12:00";
     $svar= sparaNyUppgift($postdata);
     if($svar->getStatus()===400) {
@@ -277,12 +277,43 @@ function test_SparaUppgift(): string {
     }
     $db->rollBack();
     
-    
     // Testa description saknas => 200
-    
+    unset($postdata["description"]);
+    $postdata["time"]="3:15";
+     $db->beginTransaction();
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===200) {
+        $retur .="<p class='ok'>Spara ny uppgift utan beskrivning lyckades</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift utan beskrivning "
+                . "returnerade {$svar->getStatus()} istället för förväntat 200</p>";
+    }
+    $db->rollBack();
+  
     // Testa aktivitetsid felaktigt (-1) => 400
-    
+    $postdata["activityId"]=-1;
+    $db->beginTransaction();
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===400) {
+        $retur .="<p class='ok'>Spara ny uppgift med felaktigt aktivityId (-1) misslyckades, som förväntat</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift utan felaktivt activityId (-1) "
+                . "returnerade {$svar->getStatus()} istället för förväntat 400</p>";
+    }
+    $db->rollBack();
+     
     // Testa aktivitetsid som saknas (100) => 400
+    $postdata["activityId"]=100;
+    $db->beginTransaction();
+    $svar= sparaNyUppgift($postdata);
+    if($svar->getStatus()===400) {
+        $retur .="<p class='ok'>Spara ny uppgift med felaktigt aktivityId (100) misslyckades, som förväntat</p>";
+    } else {
+        $retur .= "<p class='error'>Spara ny uppgift med felaktivt activityId (100) "
+                . "returnerade {$svar->getStatus()} istället för förväntat 400</p>";
+    }
+    $db->rollBack();
+     
     
     
     } catch (Exception $ex) {
