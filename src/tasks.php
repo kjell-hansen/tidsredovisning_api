@@ -17,11 +17,10 @@ function tasklists(Route $route): Response {
         if (count($route->getParams()) === 2 && $route->getMethod() === RequestMethod::GET) {
             return hamtaDatum(new DateTimeImmutable($route->getParams()[0]), new DateTimeImmutable($route->getParams()[1]));
         }
+        return new Response(['Okänt anrop', $route->getRoute()], 500);
     } catch (Exception $exc) {
         return new Response($exc->getMessage(), 400);
     }
-
-    return new Response("Okänt anrop", 400);
 }
 
 /**
@@ -44,11 +43,10 @@ function tasks(Route $route, array $postData): Response {
         if (count($route->getParams()) === 1 && $route->getMethod() === RequestMethod::DELETE) {
             return raderaUppgift((int) $route->getParams()[0]);
         }
+        return new Response(['Okänt anrop', $route->getRoute()], 500);
     } catch (Exception $exc) {
         return new Response($exc->getMessage(), 400);
     }
-
-    return new Response("Okänt anrop", 400);
 }
 
 /**

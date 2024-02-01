@@ -1,17 +1,25 @@
 <?php
 
 declare (strict_types=1);
+require_once __DIR__ . '/Settings.php'; // Settings;
 
-function connectDb(): PDO {
-    static $db=null;
-
-    if ($db===null) {
-        // Koppla mot databasen
-        $dsn = 'mysql:dbname=tidsapp;host=localhost';
-        $dbUser = 'root';
-        $dbPassword = "";
-        $db = new PDO($dsn, $dbUser, $dbPassword);
+function connectDb(): PDO
+{
+    try {
+        static $db=null;
+        if ($db === null) {
+            // Hämta settings 
+            $settings = new Settings();
+            // Koppla mot databasen
+            $dsn = $settings->dsn;
+            $dbUser = $settings->dbUser;
+            $dbPassword = $settings->dbPassword;
+            $db = new PDO($dsn, $dbUser, $dbPassword);
+        }
+        
+        return $db;
+    } catch (Exception $e) {
+        throw $e;
     }
 
-    return $db;
 }

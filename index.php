@@ -1,6 +1,6 @@
 <?php
 
-require_once './src/routes.php';
+require_once './src/Routes.php';
 require_once './src/funktioner.php';
 require_once './src/Route.php';
 require_once './src/Response.php';
@@ -24,19 +24,19 @@ $route = getRoute($uri, $metod);
 // Hantera ruttinformationen
 switch ($route->getRoute()) {
     case "/activity/":
-        require_once './src/activities.php';
+        require_once './src/Activities.php';
         $retur = activities($route, $postData);
         break;
     case "/tasklist/":
-        require_once './src/tasks.php';
+        require_once './src/Tasks.php';
         $retur = tasklists($route);
         break;
     case "/task/":
-        require_once './src/tasks.php';
+        require_once './src/Tasks.php';
         $retur = tasks($route, $postData);
         break;
     case "/compilation/":
-        require_once './src/compilations.php';
+        require_once './src/Compilations.php';
         $retur = compilations($route);
         break;
     default:

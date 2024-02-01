@@ -13,6 +13,7 @@ function compilations(Route $route): Response {
         if (count($route->getParams()) === 2 && $route->getMethod() === RequestMethod::GET) {
             return hamtaSammanstallning(new DateTimeImmutable($route->getParams()[0]), new DateTimeImmutable($route->getParams()[1]));
         }
+        return new Response(['Okänt anrop', $route->getRoute()], 500);
     } catch (Exception $exc) {
         return new Response($exc->getMessage(), 400);
     }

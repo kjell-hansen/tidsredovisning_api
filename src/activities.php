@@ -5,11 +5,13 @@ require_once __DIR__ . '/funktioner.php';
 
 /**
  * Läs av rutt-information och anropa funktion baserat på angiven rutt
- * @param Route $route Rutt-information
- * @param array $postData Indata för behandling i angiven rutt
+ *
+ * @param  Route $route    Rutt-information
+ * @param  array $postData Indata för behandling i angiven rutt
  * @return Response
  */
-function activities(Route $route, array $postData): Response {
+function activities(Route $route, array $postData): Response
+{
     try {
         if (count($route->getParams()) === 0 && $route->getMethod() === RequestMethod::GET) {
             return hamtaAllaAktiviteter();
@@ -17,8 +19,9 @@ function activities(Route $route, array $postData): Response {
         if (count($route->getParams()) === 1 && $route->getMethod() === RequestMethod::GET) {
             return hamtaEnskildAktivitet((int) $route->getParams()[0]);
         }
-        if (isset($postData["activity"]) && count($route->getParams()) === 0 &&
-                $route->getMethod() === RequestMethod::POST) {
+        if (isset($postData["activity"]) && count($route->getParams()) === 0 
+            && $route->getMethod() === RequestMethod::POST
+        ) {
             return sparaNyAktivitet((string) $postData["activity"]);
         }
         if (count($route->getParams()) === 1 && $route->getMethod() === RequestMethod::PUT) {
@@ -27,6 +30,7 @@ function activities(Route $route, array $postData): Response {
         if (count($route->getParams()) === 1 && $route->getMethod() === RequestMethod::DELETE) {
             return raderaAktivetet((int) $route->getParams()[0]);
         }
+        return new Response(['Okänt anrop', $route->getRoute()], 500);
     } catch (Exception $exc) {
         return new Response($exc->getMessage(), 400);
     }
@@ -36,9 +40,11 @@ function activities(Route $route, array $postData): Response {
 
 /**
  * Returnerar alla aktiviteter som finns i databasen
+ *
  * @return Response
  */
-function hamtaAllaAktiviteter(): Response {
+function hamtaAllaAktiviteter(): Response
+{
     //Koppla mot databasen
     $db = connectDb();
 
@@ -63,10 +69,12 @@ function hamtaAllaAktiviteter(): Response {
 
 /**
  * Returnerar en enskild aktivitet som finns i databasen
- * @param int $id Id för aktiviteten
+ *
+ * @param  int $id Id för aktiviteten
  * @return Response
  */
-function hamtaEnskildAktivitet(int $id): Response {
+function hamtaEnskildAktivitet(int $id): Response
+{
     // Kontrollera indata
     $kollatID = filter_var($id, FILTER_VALIDATE_INT);
     if (!$kollatID || $kollatID < 1) {
@@ -99,10 +107,12 @@ function hamtaEnskildAktivitet(int $id): Response {
 
 /**
  * Lagrar en ny aktivitet i databasen
- * @param string $aktivitet Aktivitet som ska sparas
+ *
+ * @param  string $aktivitet Aktivitet som ska sparas
  * @return Response
  */
-function sparaNyAktivitet(string $aktivitet): Response {
+function sparaNyAktivitet(string $aktivitet): Response
+{
     // Kontrollera indata
     $kontrolleradAktivitet = trim($aktivitet);
     $kontrolleradAktivitet = filter_var($kontrolleradAktivitet, FILTER_SANITIZE_ENCODED);
@@ -141,11 +151,15 @@ function sparaNyAktivitet(string $aktivitet): Response {
 
 /**
  * Uppdaterar angivet id med ny text
- * @param int $id Id för posten som ska uppdateras
- * @param string $aktivitet Ny text
+ *
+ * @param  int    $id        Id för posten som
+ *                           ska
+                           uppdateras
+ * @param  string $aktivitet Ny text
  * @return Response
  */
-function uppdateraAktivitet(int $id, string $aktivitet): Response {
+function uppdateraAktivitet(int $id, string $aktivitet): Response
+{
     // Kontrollera indata
     $kollatID = filter_var($id, FILTER_VALIDATE_INT);
     if (!$kollatID || $kollatID < 1) {
@@ -165,9 +179,11 @@ function uppdateraAktivitet(int $id, string $aktivitet): Response {
         $db = connectDb();
 
         // Uppdatera post
-        $stmt = $db->prepare("UPDATE activities"
+        $stmt = $db->prepare(
+            "UPDATE activities"
                 . " SET activity=:aktivitet"
-                . " WHERE id=:id");
+            . " WHERE id=:id"
+        );
         $stmt->execute(["aktivitet" => $kontrolleradAktivitet, "id" => $kollatID]);
         $antalPoster = $stmt->rowCount();
 
@@ -191,10 +207,12 @@ function uppdateraAktivitet(int $id, string $aktivitet): Response {
 
 /**
  * Raderar en aktivitet med angivet id
- * @param int $id Id för posten som ska raderas
+ *
+ * @param  int $id Id för posten som ska raderas
  * @return Response
  */
-function raderaAktivetet(int $id): Response {
+function raderaAktivetet(int $id): Response
+{
     // Kontrollera indata
     $kollatID = filter_var($id, FILTER_VALIDATE_INT);
     if (!$kollatID || $kollatID < 1) {
@@ -208,8 +226,10 @@ function raderaAktivetet(int $id): Response {
         $db = connectDb();
     
         // Skicka radera-kommando
-        $stmt = $db->prepare("DELETE FROM activities"
-                . " WHERE id=:id");
+        $stmt = $db->prepare(
+            "DELETE FROM activities"
+            . " WHERE id=:id"
+        );
         $stmt->execute(["id" => $kollatID]);
         $antalPoster = $stmt->rowCount();
     
