@@ -2,12 +2,11 @@
 
 /**
  * Inställningar för api:et
- *
- * @return stdClass
  */
-function Settings(): stdClass
+class Settings
 {
-    $retur = new stdClass();
 
-    return $retur;
+    public string  $dsn = "";
+    public string  $dbUser = "";
+    public string  $dbPassword = "";
 }
